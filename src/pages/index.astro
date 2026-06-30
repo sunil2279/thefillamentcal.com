@@ -1,11 +1,1367 @@
 ---
-import Welcome from '../components/Welcome.astro';
 import Layout from '../layouts/Layout.astro';
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
 ---
 
 <Layout>
-	<Welcome />
+
+<!-- ═══════════════════════════════════════════════════════════
+     JSON-LD Structured Data
+═══════════════════════════════════════════════════════════ -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "TheFilamentCalc — 3D Printer Filament Calculator",
+      "url": "https://thefilamentcalc.com/",
+      "description": "Free online 3D print weight to length calculator. Convert filament grams to meters and feet for PLA, ABS, PETG, and TPU. Calculate cost per gram and projected print usage in real time.",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Any",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "featureList": [
+        "Convert 3D printer filament grams to meters",
+        "Filament length calculator for PLA, ABS, PETG, TPU",
+        "Real-time cost per gram calculation",
+        "Projected 3D print usage estimator"
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How do I convert 3D printer filament grams to meters?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "To convert filament grams to meters, divide the weight in grams by the weight per meter of your filament. For 1.75mm PLA (density 1.24 g/cm³), the weight per meter is approximately 2.98 g/m. So 100g ÷ 2.98 g/m ≈ 33.6 meters. Our calculator does this automatically for PLA, ABS, PETG, and TPU."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How many meters of filament are on a 1kg spool?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A standard 1kg (1000g) spool of 1.75mm PLA contains approximately 335 meters (1099 feet) of filament. For ABS the figure is about 399 meters, for PETG about 327 meters, and for TPU about 343 meters. The difference comes from each material's volumetric density."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the formula for filament length from weight?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The formula is: Length (m) = Weight (g) ÷ (π × r² × 100 × density). For 1.75mm filament, the radius r = 0.0875 cm. The cross-sectional volume per meter is π × 0.0875² × 100 ≈ 2.405 cm³/m. Multiply by the material density to get grams per meter, then divide your target weight by that figure."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I calculate the cost of filament per gram?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Divide the spool price by the spool weight in grams. For example, a $20 spool of 1000g gives a cost of $0.02 per gram. Multiply that by the grams you plan to use to get the material cost for any print. Our calculator updates this in real time as you type."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does filament material type affect the length per spool?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Each material has a different volumetric density, which directly affects how many meters fit on a spool of the same weight. ABS (1.04 g/cm³) is the lightest, giving the most meters per kilogram. PETG (1.27 g/cm³) is the densest of the common materials, giving the fewest meters. PLA (1.24 g/cm³) and TPU (1.21 g/cm³) fall in between."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
+
+<!-- ═══════════════════════════════════════════════════════════
+     NAV
+═══════════════════════════════════════════════════════════ -->
+<header id="site-nav">
+  <nav>
+    <a href="/" class="nav-logo" aria-label="TheFilamentCalc home">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+        <circle cx="10" cy="10" r="9" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M10 4 Q14 7 10 10 Q6 13 10 16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+      </svg>
+      <span>TheFilamentCalc</span>
+    </a>
+    <div class="nav-right">
+      <a href="#docs" class="nav-link">Docs</a>
+      <a href="#faq" class="nav-link">FAQ</a>
+      <button id="theme-toggle" aria-label="Toggle light/dark theme" title="Toggle theme">
+        <span class="icon-sun" aria-hidden="true">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"/>
+            <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+            <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+          </svg>
+        </span>
+        <span class="icon-moon" aria-hidden="true">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+        </span>
+      </button>
+    </div>
+  </nav>
+</header>
+
+<!-- ═══════════════════════════════════════════════════════════
+     HERO
+═══════════════════════════════════════════════════════════ -->
+<section class="hero-band">
+  <div class="hero-gradient" aria-hidden="true"></div>
+  <div class="container hero-content">
+    <div class="eyebrow">3D Printer Filament Calculator</div>
+    <h1>Convert filament grams<br>to meters, instantly.</h1>
+    <p class="hero-lead">Enter your filament weight and get real-time length, cost, and print estimates for PLA, ABS, PETG, and TPU — no sign-up required.</p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     CALCULATOR CARD
+═══════════════════════════════════════════════════════════ -->
+<main id="calculator">
+  <div class="container">
+    <div class="calc-card">
+
+      <!-- ── Top controls row ── -->
+      <div class="calc-top">
+        <div class="field-group">
+          <label for="material-select" class="field-label">Material</label>
+          <select id="material-select" class="form-select">
+            <option value="pla">PLA — 1.24 g/cm³</option>
+            <option value="abs">ABS — 1.04 g/cm³</option>
+            <option value="petg">PETG — 1.27 g/cm³</option>
+            <option value="tpu">TPU — 1.21 g/cm³</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label for="spool-price" class="field-label">Spool Price ($)</label>
+          <input id="spool-price" type="number" class="form-input" value="20" min="0" step="0.01" />
+        </div>
+        <div class="field-group">
+          <label for="spool-weight" class="field-label">Spool Weight (g)</label>
+          <input id="spool-weight" type="number" class="form-input" value="1000" min="1" step="1" />
+        </div>
+      </div>
+
+      <!-- ── Primary input ── -->
+      <div class="primary-input-wrap">
+        <label for="grams-input" class="primary-label">Filament Weight</label>
+        <div class="primary-input-row">
+          <input
+            id="grams-input"
+            type="number"
+            class="primary-input"
+            placeholder="0"
+            min="0"
+            step="any"
+            aria-describedby="grams-unit"
+          />
+          <span id="grams-unit" class="primary-unit">g</span>
+        </div>
+      </div>
+
+      <!-- ── Quick-fill chips ── -->
+      <div class="chips-row" id="chips-row" aria-label="Quick fill amounts">
+        <span class="chips-label">Quick fill:</span>
+        <button class="chip" data-g="10">10g</button>
+        <button class="chip" data-g="25">25g</button>
+        <button class="chip" data-g="50">50g</button>
+        <button class="chip" data-g="100">100g</button>
+        <button class="chip" data-g="250">250g</button>
+        <button class="chip" data-g="500">500g</button>
+        <button class="chip" data-g="1000">1000g</button>
+        <span class="chips-divider" aria-hidden="true"></span>
+        <span class="chips-label">Recent:</span>
+        <div id="recent-chips" class="recent-chips-inner"></div>
+      </div>
+
+      <!-- ── Results matrix ── -->
+      <div class="results-grid" id="results-grid" aria-live="polite" aria-atomic="true">
+
+        <div class="result-card">
+          <div class="result-label">Length</div>
+          <div class="result-value" id="res-meters">—</div>
+          <div class="result-sub" id="res-meters-sub">meters</div>
+          <button class="copy-btn" data-copy="meters" aria-label="Copy meters value" title="Copy">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          </button>
+        </div>
+
+        <div class="result-card">
+          <div class="result-label">Length</div>
+          <div class="result-value" id="res-feet">—</div>
+          <div class="result-sub">feet</div>
+          <button class="copy-btn" data-copy="feet" aria-label="Copy feet value" title="Copy">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          </button>
+        </div>
+
+        <div class="result-card">
+          <div class="result-label">Material Cost</div>
+          <div class="result-value" id="res-cost">—</div>
+          <div class="result-sub" id="res-cost-sub">at $0.020/g</div>
+          <button class="copy-btn" data-copy="cost" aria-label="Copy cost value" title="Copy">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          </button>
+        </div>
+
+        <div class="result-card">
+          <div class="result-label">Spool Usage</div>
+          <div class="result-value" id="res-pct">—</div>
+          <div class="result-sub" id="res-pct-sub">of 1000g spool</div>
+          <button class="copy-btn" data-copy="pct" aria-label="Copy spool usage" title="Copy">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          </button>
+        </div>
+
+        <div class="result-card result-card--wide">
+          <div class="result-label">Projected Prints</div>
+          <div class="result-value" id="res-prints">—</div>
+          <div class="result-sub" id="res-prints-sub">prints from full spool</div>
+          <button class="copy-btn" data-copy="prints" aria-label="Copy prints estimate" title="Copy">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          </button>
+        </div>
+
+      </div>
+
+      <!-- ── Spool progress bar ── -->
+      <div class="spool-bar-wrap" aria-hidden="true">
+        <div class="spool-bar-track">
+          <div class="spool-bar-fill" id="spool-bar-fill"></div>
+        </div>
+        <span class="spool-bar-label" id="spool-bar-label">0% of spool used</span>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<!-- ═══════════════════════════════════════════════════════════
+     CONVERSION CHART
+═══════════════════════════════════════════════════════════ -->
+<section class="chart-section" id="chart">
+  <div class="container">
+    <div class="section-eyebrow">Reference Chart</div>
+    <h2 class="section-title">Filament length per weight — all materials</h2>
+    <p class="section-body">Quick-reference conversion chart for 1.75mm filament. Values calculated using volumetric density math (π × r² × 100 × density).</p>
+
+    <div class="chart-table-wrap">
+      <table class="chart-table" id="chart-table">
+        <thead>
+          <tr>
+            <th>Weight (g)</th>
+            <th>PLA (m)</th>
+            <th>ABS (m)</th>
+            <th>PETG (m)</th>
+            <th>TPU (m)</th>
+            <th>PLA (ft)</th>
+          </tr>
+        </thead>
+        <tbody id="chart-tbody">
+          <!-- Populated by JS -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     DOCUMENTATION
+═══════════════════════════════════════════════════════════ -->
+<article class="docs-section" id="docs">
+  <div class="container docs-container">
+
+    <header class="docs-header">
+      <div class="section-eyebrow">Technical Documentation</div>
+      <h2 class="section-title">3D Print Weight to Length Calculator — Complete Guide</h2>
+      <p class="section-body">Everything you need to know about converting 3D printer filament grams to meters, understanding material densities, and estimating print costs with precision.</p>
+    </header>
+
+    <div class="docs-body">
+
+      <section class="docs-section-inner">
+        <h3>What is a Filament Length Calculator?</h3>
+        <p>A <strong>filament length calculator</strong> is a utility that converts the weight of 3D printer filament — measured in grams — into a usable length measurement in meters or feet. This is essential for 3D printing workflows because slicer software often reports material usage in grams, while physical spools are measured by weight. Knowing the exact length lets you plan multi-part prints, estimate remaining spool life, and compare material costs across different suppliers.</p>
+        <p>The core math relies on the physical geometry of the filament strand and the volumetric density of the polymer. For standard 1.75mm diameter filament, the cross-sectional radius is 0.0875 cm. The volume of one meter of filament is calculated as <code>V = π × r² × 100</code>, where the factor of 100 converts from centimeters to meters. This gives approximately <strong>2.405 cm³ per meter</strong> for any 1.75mm filament, regardless of material.</p>
+        <p>Multiplying that volume by the material's density (in g/cm³) yields the <strong>weight per meter</strong>. Dividing your target weight by this figure gives the length. Our <strong>3D print weight to length calculator</strong> performs all of this in real time as you type, with no page reloads or server calls.</p>
+      </section>
+
+      <section class="docs-section-inner">
+        <h3>The Physics: Volumetric Density and Filament Geometry</h3>
+        <p>Every polymer used in FDM 3D printing has a unique <strong>volumetric density</strong> — the mass per unit volume, expressed in grams per cubic centimeter (g/cm³). This single number is the key variable that determines how many meters of filament you get per kilogram of spool weight.</p>
+        <p>For 1.75mm filament, the calculation chain is:</p>
+        <ol>
+          <li><strong>Radius:</strong> 1.75mm ÷ 2 = 0.875mm = 0.0875 cm</li>
+          <li><strong>Cross-sectional area:</strong> π × (0.0875)² ≈ 0.02405 cm²</li>
+          <li><strong>Volume per meter:</strong> 0.02405 cm² × 100 cm = 2.405 cm³/m</li>
+          <li><strong>Weight per meter:</strong> 2.405 cm³/m × density (g/cm³) = g/m</li>
+          <li><strong>Length from weight:</strong> Weight (g) ÷ Weight per meter (g/m) = Length (m)</li>
+        </ol>
+        <p>This formula is the industry standard used by slicer software like PrusaSlicer, Cura, and Bambu Studio when reporting filament consumption. Our calculator uses the same constants, so results match your slicer's estimates precisely.</p>
+      </section>
+
+      <section class="docs-section-inner">
+        <h3>Material Profiles: PLA, ABS, PETG, and TPU</h3>
+        <p>The four most common FDM materials each have distinct density values that directly affect the <strong>convert 3D printer filament grams to meters</strong> calculation:</p>
+
+        <h4>PLA — Polylactic Acid (1.24 g/cm³)</h4>
+        <p>PLA is the most popular desktop 3D printing material. Derived from renewable resources like corn starch, it prints at low temperatures (190–220°C) with minimal warping. At 1.24 g/cm³, a 1kg spool yields approximately <strong>335 meters</strong> (1,099 feet) of 1.75mm filament. PLA is the benchmark material for most filament length calculations.</p>
+
+        <h4>ABS — Acrylonitrile Butadiene Styrene (1.04 g/cm³)</h4>
+        <p>ABS is lighter than PLA, which means a 1kg spool contains more filament by length — approximately <strong>399 meters</strong> (1,309 feet). It requires higher print temperatures (220–250°C) and an enclosed printer to prevent warping. ABS is favored for functional parts that need impact resistance and higher heat tolerance.</p>
+
+        <h4>PETG — Polyethylene Terephthalate Glycol (1.27 g/cm³)</h4>
+        <p>PETG is the densest of the four common materials at 1.27 g/cm³, yielding approximately <strong>327 meters</strong> (1,073 feet) per kilogram. It combines the ease of PLA with the strength of ABS, making it a popular choice for mechanical parts, food-safe containers, and outdoor applications. Its higher density means slightly fewer meters per spool compared to PLA.</p>
+
+        <h4>TPU — Thermoplastic Polyurethane (1.21 g/cm³)</h4>
+        <p>TPU is a flexible filament with a density of 1.21 g/cm³, yielding approximately <strong>343 meters</strong> (1,125 feet) per kilogram. It requires slow print speeds and a direct-drive extruder for best results. TPU is used for phone cases, gaskets, shoe soles, and any application requiring rubber-like flexibility.</p>
+      </section>
+
+      <section class="docs-section-inner">
+        <h3>How to Use the Filament Calculator</h3>
+        <p>The calculator is designed around a single-input workflow. Here is the step-by-step process:</p>
+        <ol>
+          <li><strong>Select your material</strong> from the dropdown (PLA, ABS, PETG, or TPU). The density constant updates automatically.</li>
+          <li><strong>Enter your spool price</strong> (default $20) and <strong>spool weight</strong> (default 1000g). These are used to compute the real-time cost per gram.</li>
+          <li><strong>Type a weight in grams</strong> into the main input field. All five result cards update instantly — no button press required.</li>
+          <li><strong>Use quick-fill chips</strong> to jump to common weights (10g, 25g, 50g, 100g, 250g, 500g, 1000g). Your recent custom entries are saved automatically in browser localStorage and appear as additional chips.</li>
+          <li><strong>Copy any result</strong> to your clipboard using the copy icon on each result card.</li>
+        </ol>
+        <p>The spool usage progress bar at the bottom of the calculator gives a visual representation of how much of your spool the entered weight represents, making it easy to plan multi-print sessions.</p>
+      </section>
+
+      <section class="docs-section-inner">
+        <h3>Cost Calculation and Print Budgeting</h3>
+        <p>Accurate material cost tracking is critical for makers who sell prints, run print farms, or simply want to understand their hobby expenses. The cost formula is straightforward:</p>
+        <p><code>Cost per gram = Spool Price ÷ Spool Weight</code></p>
+        <p><code>Print cost = Grams used × Cost per gram</code></p>
+        <p>For a standard $20 / 1000g spool, the cost per gram is $0.020. A 50g print costs $1.00 in raw material. This does not account for electricity, machine wear, or failed prints — but it gives you the baseline material cost that most print pricing guides recommend as the starting point for quoting jobs.</p>
+        <p>The <strong>Projected Prints</strong> result shows how many identical prints you could produce from a full spool at the entered weight. This is useful for batch production planning: if a phone stand uses 45g, a 1kg spool yields approximately 22 identical prints.</p>
+      </section>
+
+      <section class="docs-section-inner">
+        <h3>Accuracy and Slicer Compatibility</h3>
+        <p>The density constants used in this calculator match the values embedded in major slicer software profiles. PrusaSlicer uses 1.24 g/cm³ for PLA, 1.04 g/cm³ for ABS, 1.27 g/cm³ for PETG, and 1.21 g/cm³ for TPU — identical to our implementation. Bambu Studio and Cura use the same baseline values, though some third-party filament brands publish slightly different densities on their technical data sheets.</p>
+        <p>For maximum accuracy, check your filament manufacturer's TDS (Technical Data Sheet) for the exact density value. Differences of ±0.02 g/cm³ from the standard values will produce length errors of approximately 1–2% — negligible for most planning purposes but worth noting for precision applications.</p>
+        <p>All calculations run entirely in your browser using vanilla JavaScript. No data is sent to any server. Your recent weight entries are stored only in your browser's localStorage and never leave your device.</p>
+      </section>
+
+    </div>
+  </div>
+</article>
+
+<!-- ═══════════════════════════════════════════════════════════
+     FAQ
+═══════════════════════════════════════════════════════════ -->
+<section class="faq-section" id="faq">
+  <div class="container">
+    <div class="section-eyebrow">FAQ</div>
+    <h2 class="section-title">Frequently asked questions</h2>
+
+    <div class="faq-list">
+
+      <details class="faq-item">
+        <summary class="faq-q">How do I convert 3D printer filament grams to meters?</summary>
+        <div class="faq-a">
+          <p>Divide the weight in grams by the weight per meter of your filament. For 1.75mm PLA (density 1.24 g/cm³), the weight per meter is approximately 2.98 g/m. So 100g ÷ 2.98 g/m ≈ 33.6 meters. Our calculator does this automatically for PLA, ABS, PETG, and TPU — just type your weight and the result appears instantly.</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary class="faq-q">How many meters of filament are on a 1kg spool?</summary>
+        <div class="faq-a">
+          <p>A standard 1kg (1000g) spool of 1.75mm filament contains approximately:</p>
+          <ul>
+            <li><strong>PLA:</strong> ~335 meters (1,099 feet)</li>
+            <li><strong>ABS:</strong> ~399 meters (1,309 feet)</li>
+            <li><strong>PETG:</strong> ~327 meters (1,073 feet)</li>
+            <li><strong>TPU:</strong> ~343 meters (1,125 feet)</li>
+          </ul>
+          <p>The difference comes from each material's volumetric density. ABS is the lightest, so you get the most meters per kilogram.</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary class="faq-q">What is the formula for filament length from weight?</summary>
+        <div class="faq-a">
+          <p>The formula is: <code>Length (m) = Weight (g) ÷ (π × r² × 100 × density)</code></p>
+          <p>For 1.75mm filament, the radius r = 0.0875 cm. The cross-sectional volume per meter is π × 0.0875² × 100 ≈ 2.405 cm³/m. Multiply by the material density to get grams per meter, then divide your target weight by that figure.</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary class="faq-q">How do I calculate the cost of filament per gram?</summary>
+        <div class="faq-a">
+          <p>Divide the spool price by the spool weight in grams. For example, a $20 spool of 1000g gives a cost of $0.020 per gram. Multiply that by the grams you plan to use to get the material cost for any print. Enter your spool price and weight in the calculator fields above — the cost updates in real time.</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary class="faq-q">Does filament material type affect the length per spool?</summary>
+        <div class="faq-a">
+          <p>Yes. Each material has a different volumetric density, which directly affects how many meters fit on a spool of the same weight. ABS (1.04 g/cm³) is the lightest, giving the most meters per kilogram. PETG (1.27 g/cm³) is the densest of the common materials, giving the fewest meters. PLA (1.24 g/cm³) and TPU (1.21 g/cm³) fall in between.</p>
+        </div>
+      </details>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     FOOTER
+═══════════════════════════════════════════════════════════ -->
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <div class="footer-brand">
+      <svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+        <circle cx="10" cy="10" r="9" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M10 4 Q14 7 10 10 Q6 13 10 16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+      </svg>
+      <span>TheFilamentCalc</span>
+    </div>
+    <p class="footer-copy">Free 3D printer filament calculator. All calculations run locally in your browser.</p>
+    <nav class="footer-links" aria-label="Footer navigation">
+      <a href="#calculator">Calculator</a>
+      <a href="#chart">Chart</a>
+      <a href="#docs">Docs</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+  </div>
+</footer>
+
+<!-- ═══════════════════════════════════════════════════════════
+     STYLES
+═══════════════════════════════════════════════════════════ -->
+<style>
+  /* ── Layout containers ── */
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* ── NAV ── */
+  #site-nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+
+  #site-nav nav {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    color: var(--fg);
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: -0.28px;
+  }
+
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .nav-link {
+    color: var(--fg-body);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: -0.28px;
+    padding: 6px 10px;
+    border-radius: 9999px;
+    transition: color 0.15s, background 0.15s;
+  }
+  .nav-link:hover { color: var(--fg); background: var(--bg-soft2); }
+
+  #theme-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 9999px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--fg);
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+    margin-left: 4px;
+  }
+  #theme-toggle:hover { background: var(--bg-soft2); }
+
+  html.light .icon-moon { display: none; }
+  html.dark  .icon-sun  { display: none; }
+
+  /* ── HERO ── */
+  .hero-band {
+    position: relative;
+    overflow: hidden;
+    padding: 96px 0 80px;
+    background: var(--bg);
+    text-align: center;
+  }
+
+  .hero-gradient {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 50% -10%,
+      rgba(0,124,240,0.12) 0%,
+      rgba(0,223,216,0.08) 30%,
+      rgba(121,40,202,0.06) 60%,
+      transparent 100%);
+    pointer-events: none;
+  }
+
+  html.dark .hero-gradient {
+    background: radial-gradient(ellipse 80% 60% at 50% -10%,
+      rgba(0,124,240,0.18) 0%,
+      rgba(0,223,216,0.12) 30%,
+      rgba(121,40,202,0.10) 60%,
+      transparent 100%);
+  }
+
+  .hero-content { position: relative; z-index: 1; }
+
+  .eyebrow {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--fg-mute);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    padding: 4px 10px;
+    border: 1px solid var(--border);
+    border-radius: 9999px;
+    background: var(--bg-soft);
+  }
+
+  .hero-band h1 {
+    font-size: clamp(32px, 5vw, 48px);
+    font-weight: 600;
+    line-height: 1.05;
+    letter-spacing: -2px;
+    color: var(--fg);
+    margin: 0 0 16px;
+  }
+
+  .hero-lead {
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 28px;
+    color: var(--fg-body);
+    max-width: 560px;
+    margin: 0 auto;
+  }
+
+  /* ── CALCULATOR CARD ── */
+  main#calculator {
+    padding: 48px 0 64px;
+    background: var(--bg-soft);
+  }
+
+  .calc-card {
+    background: var(--bg);
+    border-radius: 12px;
+    box-shadow: var(--card-shadow-lg);
+    padding: 32px;
+    max-width: 860px;
+    margin: 0 auto;
+  }
+
+  .calc-top {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+
+  @media (max-width: 600px) {
+    .calc-top { grid-template-columns: 1fr; }
+  }
+
+  .field-group { display: flex; flex-direction: column; gap: 6px; }
+
+  .field-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--fg-mute);
+    letter-spacing: -0.28px;
+    font-family: 'JetBrains Mono', monospace;
+    text-transform: uppercase;
+  }
+
+  .form-select,
+  .form-input {
+    height: 40px;
+    padding: 0 12px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--bg);
+    color: var(--fg);
+    font-size: 14px;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+
+  .form-select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    padding-right: 32px;
+    cursor: pointer;
+  }
+
+  .form-select:focus,
+  .form-input:focus {
+    border-color: var(--fg);
+    box-shadow: 0 0 0 3px rgba(23,23,23,0.08);
+  }
+
+  html.dark .form-select:focus,
+  html.dark .form-input:focus {
+    box-shadow: 0 0 0 3px rgba(237,237,237,0.08);
+  }
+
+  /* ── Primary input ── */
+  .primary-input-wrap {
+    margin-bottom: 20px;
+  }
+
+  .primary-label {
+    display: block;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--fg-mute);
+    letter-spacing: -0.28px;
+    font-family: 'JetBrains Mono', monospace;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .primary-input-row {
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: border-color 0.15s, box-shadow 0.15s;
+    background: var(--bg);
+  }
+
+  .primary-input-row:focus-within {
+    border-color: var(--fg);
+    box-shadow: 0 0 0 3px rgba(23,23,23,0.08);
+  }
+
+  html.dark .primary-input-row:focus-within {
+    box-shadow: 0 0 0 3px rgba(237,237,237,0.08);
+  }
+
+  .primary-input {
+    flex: 1;
+    height: 56px;
+    padding: 0 16px;
+    border: none;
+    background: transparent;
+    color: var(--fg);
+    font-size: 28px;
+    font-weight: 600;
+    letter-spacing: -1px;
+    font-family: inherit;
+    outline: none;
+    min-width: 0;
+  }
+
+  .primary-input::placeholder { color: var(--fg-mute); }
+
+  /* Remove number input arrows */
+  .primary-input::-webkit-outer-spin-button,
+  .primary-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+  .primary-input[type=number] { -moz-appearance: textfield; }
+  .form-input::-webkit-outer-spin-button,
+  .form-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+  .form-input[type=number] { -moz-appearance: textfield; }
+
+  .primary-unit {
+    padding: 0 20px;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--fg-mute);
+    font-family: 'JetBrains Mono', monospace;
+    border-left: 1px solid var(--border);
+    height: 56px;
+    display: flex;
+    align-items: center;
+    background: var(--bg-soft);
+    letter-spacing: -0.5px;
+  }
+
+  /* ── Chips ── */
+  .chips-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 28px;
+  }
+
+  .chips-label {
+    font-size: 12px;
+    color: var(--fg-mute);
+    font-family: 'JetBrains Mono', monospace;
+    white-space: nowrap;
+  }
+
+  .chips-divider {
+    width: 1px;
+    height: 16px;
+    background: var(--border);
+    margin: 0 2px;
+  }
+
+  .chip {
+    height: 28px;
+    padding: 0 10px;
+    border: 1px solid var(--border);
+    border-radius: 9999px;
+    background: var(--bg-soft);
+    color: var(--fg-body);
+    font-size: 12px;
+    font-weight: 500;
+    font-family: 'JetBrains Mono', monospace;
+    cursor: pointer;
+    transition: background 0.12s, border-color 0.12s, color 0.12s;
+    white-space: nowrap;
+  }
+
+  .chip:hover {
+    background: var(--fg);
+    color: var(--bg);
+    border-color: var(--fg);
+  }
+
+  .chip.recent {
+    border-style: dashed;
+    color: var(--fg-mute);
+  }
+
+  .recent-chips-inner { display: flex; flex-wrap: wrap; gap: 6px; }
+
+  /* ── Results grid ── */
+  .results-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  @media (max-width: 700px) {
+    .results-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (max-width: 400px) {
+    .results-grid { grid-template-columns: 1fr; }
+  }
+
+  .result-card {
+    position: relative;
+    background: var(--bg-soft);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    transition: border-color 0.15s;
+  }
+
+  .result-card--wide {
+    grid-column: span 4;
+  }
+
+  @media (max-width: 700px) {
+    .result-card--wide { grid-column: span 2; }
+  }
+
+  @media (max-width: 400px) {
+    .result-card--wide { grid-column: span 1; }
+  }
+
+  .result-label {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--fg-mute);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .result-value {
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--fg);
+    letter-spacing: -1px;
+    line-height: 1.1;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .result-sub {
+    font-size: 12px;
+    color: var(--fg-mute);
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .copy-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--fg-mute);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.15s, background 0.15s, color 0.15s;
+  }
+
+  .result-card:hover .copy-btn { opacity: 1; }
+  .copy-btn:hover { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+  .copy-btn.copied { opacity: 1; background: #0070f3; color: #fff; border-color: #0070f3; }
+
+  /* ── Spool bar ── */
+  .spool-bar-wrap {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .spool-bar-track {
+    flex: 1;
+    height: 4px;
+    background: var(--border);
+    border-radius: 9999px;
+    overflow: hidden;
+  }
+
+  .spool-bar-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #007cf0, #00dfd8);
+    border-radius: 9999px;
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .spool-bar-label {
+    font-size: 12px;
+    color: var(--fg-mute);
+    font-family: 'JetBrains Mono', monospace;
+    white-space: nowrap;
+    min-width: 140px;
+  }
+
+  /* ── CHART SECTION ── */
+  .chart-section {
+    padding: 80px 0;
+    background: var(--bg);
+    border-top: 1px solid var(--border);
+  }
+
+  .section-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--fg-mute);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 12px;
+  }
+
+  .section-title {
+    font-size: clamp(24px, 3vw, 32px);
+    font-weight: 600;
+    letter-spacing: -1.28px;
+    color: var(--fg);
+    margin: 0 0 12px;
+    line-height: 1.2;
+  }
+
+  .section-body {
+    font-size: 16px;
+    color: var(--fg-body);
+    line-height: 24px;
+    max-width: 640px;
+    margin: 0 0 32px;
+  }
+
+  .chart-table-wrap {
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+  }
+
+  .chart-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+  }
+
+  .chart-table th {
+    background: var(--bg-soft);
+    color: var(--fg-mute);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 10px 16px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+
+  .chart-table td {
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--border);
+    color: var(--fg-body);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  .chart-table tr:last-child td { border-bottom: none; }
+  .chart-table td:first-child { font-weight: 600; color: var(--fg); font-family: 'JetBrains Mono', monospace; }
+  .chart-table tr:hover td { background: var(--bg-soft); }
+
+  /* ── DOCS SECTION ── */
+  .docs-section {
+    padding: 80px 0;
+    background: var(--bg-soft);
+    border-top: 1px solid var(--border);
+  }
+
+  .docs-container { max-width: 800px; }
+
+  .docs-header { margin-bottom: 48px; }
+
+  .docs-body { display: flex; flex-direction: column; gap: 40px; }
+
+  .docs-section-inner h3 {
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: -0.6px;
+    color: var(--fg);
+    margin: 0 0 12px;
+  }
+
+  .docs-section-inner h4 {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--fg);
+    margin: 20px 0 8px;
+    letter-spacing: -0.3px;
+  }
+
+  .docs-section-inner p {
+    font-size: 16px;
+    line-height: 26px;
+    color: var(--fg-body);
+    margin: 0 0 12px;
+  }
+
+  .docs-section-inner ol,
+  .docs-section-inner ul {
+    padding-left: 20px;
+    margin: 0 0 12px;
+  }
+
+  .docs-section-inner li {
+    font-size: 16px;
+    line-height: 26px;
+    color: var(--fg-body);
+    margin-bottom: 6px;
+  }
+
+  .docs-section-inner code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    background: var(--bg-soft2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1px 5px;
+    color: var(--fg);
+  }
+
+  /* ── FAQ SECTION ── */
+  .faq-section {
+    padding: 80px 0;
+    background: var(--bg);
+    border-top: 1px solid var(--border);
+  }
+
+  .faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    max-width: 800px;
+  }
+
+  .faq-item {
+    border-bottom: 1px solid var(--border);
+  }
+
+  .faq-item:last-child { border-bottom: none; }
+
+  .faq-q {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 20px;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--fg);
+    cursor: pointer;
+    list-style: none;
+    gap: 12px;
+    transition: background 0.12s;
+    letter-spacing: -0.28px;
+  }
+
+  .faq-q::-webkit-details-marker { display: none; }
+
+  .faq-q::after {
+    content: '+';
+    font-size: 18px;
+    font-weight: 300;
+    color: var(--fg-mute);
+    flex-shrink: 0;
+    transition: transform 0.2s;
+  }
+
+  details[open] .faq-q::after { transform: rotate(45deg); }
+
+  .faq-q:hover { background: var(--bg-soft); }
+
+  .faq-a {
+    padding: 0 20px 18px;
+    font-size: 15px;
+    line-height: 24px;
+    color: var(--fg-body);
+  }
+
+  .faq-a p { margin: 0 0 10px; }
+  .faq-a p:last-child { margin-bottom: 0; }
+  .faq-a ul { padding-left: 18px; margin: 8px 0; }
+  .faq-a li { margin-bottom: 4px; }
+  .faq-a code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    background: var(--bg-soft2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1px 5px;
+    color: var(--fg);
+  }
+
+  /* ── FOOTER ── */
+  .site-footer {
+    background: var(--bg);
+    border-top: 1px solid var(--border);
+    padding: 40px 0;
+  }
+
+  .footer-inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 16px;
+    justify-content: space-between;
+  }
+
+  .footer-brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--fg);
+    letter-spacing: -0.28px;
+  }
+
+  .footer-copy {
+    font-size: 13px;
+    color: var(--fg-mute);
+    margin: 0;
+    flex: 1;
+    min-width: 200px;
+  }
+
+  .footer-links {
+    display: flex;
+    gap: 16px;
+  }
+
+  .footer-links a {
+    font-size: 13px;
+    color: var(--fg-mute);
+    text-decoration: none;
+    transition: color 0.12s;
+  }
+
+  .footer-links a:hover { color: var(--fg); }
+</style>
+
+<!-- ═══════════════════════════════════════════════════════════
+     JAVASCRIPT ENGINE
+═══════════════════════════════════════════════════════════ -->
+<script>
+  // ── Constants ──
+  const RADIUS_CM = 0.0875; // 1.75mm / 2 in cm
+  const VOL_PER_METER = Math.PI * RADIUS_CM * RADIUS_CM * 100; // cm³/m
+  const METERS_TO_FEET = 3.28084;
+  const MAX_RECENT = 5;
+  const RECENT_KEY = 'tfc_recent_grams';
+
+  const MATERIALS = {
+    pla:  { label: 'PLA',  density: 1.24 },
+    abs:  { label: 'ABS',  density: 1.04 },
+    petg: { label: 'PETG', density: 1.27 },
+    tpu:  { label: 'TPU',  density: 1.21 },
+  };
+
+  // ── DOM refs ──
+  const gramsInput    = document.getElementById('grams-input');
+  const materialSel   = document.getElementById('material-select');
+  const spoolPrice    = document.getElementById('spool-price');
+  const spoolWeight   = document.getElementById('spool-weight');
+  const resMeters     = document.getElementById('res-meters');
+  const resFeet       = document.getElementById('res-feet');
+  const resCost       = document.getElementById('res-cost');
+  const resCostSub    = document.getElementById('res-cost-sub');
+  const resPct        = document.getElementById('res-pct');
+  const resPctSub     = document.getElementById('res-pct-sub');
+  const resPrints     = document.getElementById('res-prints');
+  const resPrintsSub  = document.getElementById('res-prints-sub');
+  const spoolBarFill  = document.getElementById('spool-bar-fill');
+  const spoolBarLabel = document.getElementById('spool-bar-label');
+  const recentChips   = document.getElementById('recent-chips');
+  const chartTbody    = document.getElementById('chart-tbody');
+
+  // ── Helpers ──
+  function fmt(n, decimals = 2) {
+    if (!isFinite(n)) return '—';
+    return n.toLocaleString('en-US', { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
+  }
+
+  function weightPerMeter(density) {
+    return VOL_PER_METER * density; // g/m
+  }
+
+  function gramsToMeters(grams, density) {
+    return grams / weightPerMeter(density);
+  }
+
+  // ── Core calculation ──
+  function calculate() {
+    const grams   = parseFloat(gramsInput.value);
+    const mat     = MATERIALS[materialSel.value];
+    const price   = parseFloat(spoolPrice.value) || 0;
+    const sWeight = parseFloat(spoolWeight.value) || 1000;
+
+    const costPerGram = price / sWeight;
+    resCostSub.textContent = `at $${costPerGram.toFixed(3)}/g`;
+    resPctSub.textContent  = `of ${sWeight.toLocaleString()}g spool`;
+    resPrintsSub.textContent = `prints from full spool`;
+
+    if (!grams || grams <= 0 || isNaN(grams)) {
+      resMeters.textContent = '—';
+      resFeet.textContent   = '—';
+      resCost.textContent   = '—';
+      resPct.textContent    = '—';
+      resPrints.textContent = '—';
+      spoolBarFill.style.width = '0%';
+      spoolBarLabel.textContent = '0% of spool used';
+      return;
+    }
+
+    const meters  = gramsToMeters(grams, mat.density);
+    const feet    = meters * METERS_TO_FEET;
+    const cost    = grams * costPerGram;
+    const pct     = Math.min((grams / sWeight) * 100, 100);
+    const prints  = sWeight / grams;
+
+    resMeters.textContent = fmt(meters);
+    resFeet.textContent   = fmt(feet);
+    resCost.textContent   = '$' + fmt(cost);
+    resPct.textContent    = fmt(pct, 1) + '%';
+    resPrints.textContent = fmt(prints, 1);
+
+    spoolBarFill.style.width = pct + '%';
+    spoolBarLabel.textContent = fmt(pct, 1) + '% of spool used';
+  }
+
+  // ── Recent chips ──
+  function getRecent() {
+    try { return JSON.parse(localStorage.getItem(RECENT_KEY)) || []; }
+    catch { return []; }
+  }
+
+  function saveRecent(val) {
+    let recent = getRecent().filter(v => v !== val);
+    recent.unshift(val);
+    recent = recent.slice(0, MAX_RECENT);
+    localStorage.setItem(RECENT_KEY, JSON.stringify(recent));
+  }
+
+  function renderRecentChips() {
+    const recent = getRecent();
+    recentChips.innerHTML = '';
+    recent.forEach(val => {
+      const btn = document.createElement('button');
+      btn.className = 'chip recent';
+      btn.textContent = val + 'g';
+      btn.dataset.g = val;
+      btn.addEventListener('click', () => {
+        gramsInput.value = val;
+        calculate();
+      });
+      recentChips.appendChild(btn);
+    });
+  }
+
+  // Save recent on blur if value is valid
+  gramsInput.addEventListener('blur', () => {
+    const v = parseFloat(gramsInput.value);
+    if (v > 0 && isFinite(v)) {
+      saveRecent(v);
+      renderRecentChips();
+    }
+  });
+
+  // ── Quick-fill chips ──
+  document.querySelectorAll('.chip[data-g]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      gramsInput.value = btn.dataset.g;
+      calculate();
+    });
+  });
+
+  // ── Copy buttons ──
+  document.querySelectorAll('.copy-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const key = btn.dataset.copy;
+      const map = {
+        meters: resMeters.textContent,
+        feet:   resFeet.textContent,
+        cost:   resCost.textContent,
+        pct:    resPct.textContent,
+        prints: resPrints.textContent,
+      };
+      const text = map[key];
+      if (!text || text === '—') return;
+      try {
+        await navigator.clipboard.writeText(text);
+        btn.classList.add('copied');
+        setTimeout(() => btn.classList.remove('copied'), 1500);
+      } catch {
+        // Fallback for older browsers
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        btn.classList.add('copied');
+        setTimeout(() => btn.classList.remove('copied'), 1500);
+      }
+    });
+  });
+
+  // ── Theme toggle ──
+  document.getElementById('theme-toggle').addEventListener('click', () => {
+    const isDark = document.documentElement.classList.contains('dark');
+    const next = isDark ? 'light' : 'dark';
+    document.documentElement.classList.remove('light', 'dark');
+    document.documentElement.classList.add(next);
+    localStorage.setItem('theme', next);
+  });
+
+  // ── Conversion chart ──
+  const CHART_WEIGHTS = [1, 5, 10, 25, 50, 100, 150, 200, 250, 500, 750, 1000];
+
+  function buildChart() {
+    chartTbody.innerHTML = '';
+    CHART_WEIGHTS.forEach(w => {
+      const tr = document.createElement('tr');
+      const plaM  = gramsToMeters(w, MATERIALS.pla.density);
+      const absM  = gramsToMeters(w, MATERIALS.abs.density);
+      const petgM = gramsToMeters(w, MATERIALS.petg.density);
+      const tpuM  = gramsToMeters(w, MATERIALS.tpu.density);
+      const plaFt = plaM * METERS_TO_FEET;
+      tr.innerHTML = `
+        <td>${w.toLocaleString()}g</td>
+        <td>${fmt(plaM)}</td>
+        <td>${fmt(absM)}</td>
+        <td>${fmt(petgM)}</td>
+        <td>${fmt(tpuM)}</td>
+        <td>${fmt(plaFt)}</td>
+      `;
+      chartTbody.appendChild(tr);
+    });
+  }
+
+  // ── Event listeners ──
+  gramsInput.addEventListener('input', calculate);
+  materialSel.addEventListener('change', calculate);
+  spoolPrice.addEventListener('input', calculate);
+  spoolWeight.addEventListener('input', calculate);
+
+  // ── Init ──
+  renderRecentChips();
+  buildChart();
+  calculate();
+</script>
+
 </Layout>
