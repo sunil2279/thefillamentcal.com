@@ -1,169 +1,254 @@
 ---
+/**
+ * Layout.astro — master shell
+ *
+ * Props:
+ *   title       — <title> tag content
+ *   description — meta description
+ *   canonical   — canonical URL (defaults to thefilamentcalc.com)
+ *   ogImage     — optional Open Graph image URL
+ */
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
 interface Props {
-  title?: string;
+  title?:       string;
   description?: string;
-  canonical?: string;
+  canonical?:   string;
+  ogImage?:     string;
 }
 
 const {
-  title = "Filament Calculator — Convert 3D Printer Filament Grams to Meters",
-  description = "Free 3D print weight to length calculator. Instantly convert filament grams to meters and feet for PLA, ABS, PETG, and TPU. Calculate cost per gram and projected print usage.",
-  canonical = "https://thefilamentcalc.com/",
+  title       = 'Filament Calculator — Convert 3D Printer Filament Grams to Meters',
+  description = 'Free 3D print weight to length calculator. Instantly convert filament grams to meters and feet for PLA, ABS, PETG, and TPU. Calculate cost per gram and projected print usage.',
+  canonical   = 'https://thefilamentcalc.com/',
+  ogImage     = 'https://thefilamentcalc.com/og-image.png',
 } = Astro.props;
 ---
 
 <!doctype html>
 <html lang="en" class="light">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="icon" href="/favicon.ico" />
-    <meta name="generator" content={Astro.generator} />
+<head>
+  <!-- ── Charset & viewport ── -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="generator" content={Astro.generator} />
 
-    <!-- Primary SEO -->
-    <title>{title}</title>
-    <meta name="description" content={description} />
-    <link rel="canonical" href={canonical} />
+  <!-- ── Favicons ── -->
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="icon" href="/favicon.ico" />
 
-    <!-- Open Graph -->
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content={canonical} />
-    <meta property="og:title" content={title} />
-    <meta property="og:description" content={description} />
-    <meta property="og:site_name" content="TheFilamentCalc" />
+  <!-- ── Primary SEO ── -->
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <link rel="canonical" href={canonical} />
+  <meta name="robots" content="index, follow" />
 
-    <!-- Twitter -->
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content={title} />
-    <meta name="twitter:description" content={description} />
+  <!-- ── Open Graph ── -->
+  <meta property="og:type"        content="website" />
+  <meta property="og:url"         content={canonical} />
+  <meta property="og:title"       content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:image"       content={ogImage} />
+  <meta property="og:site_name"   content="TheFilamentCalc" />
 
-    <!-- Fonts: Geist (geometric sans) + Geist Mono -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400&display=swap"
-      rel="stylesheet"
-    />
+  <!-- ── Twitter Card ── -->
+  <meta name="twitter:card"        content="summary_large_image" />
+  <meta name="twitter:title"       content={title} />
+  <meta name="twitter:description" content={description} />
+  <meta name="twitter:image"       content={ogImage} />
 
-    <!-- Theme init: runs before paint to prevent flash -->
-    <script is:inline>
-      (function () {
-        const stored = localStorage.getItem('theme');
-        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        const theme = stored ?? (prefersDark ? 'dark' : 'light');
+  <!-- ── Fonts: Inter (sans) + JetBrains Mono ── -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400&display=swap"
+    rel="stylesheet"
+  />
+
+  <!--
+    ── Anti-FOUT theme script ──
+    Runs synchronously before first paint so the correct
+    class (light / dark) is on <html> before any CSS renders.
+    Must be is:inline so Astro does NOT defer or bundle it.
+  -->
+  <script is:inline>
+    (function () {
+      try {
+        var stored      = localStorage.getItem('theme');
+        var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        var theme       = stored || (prefersDark ? 'dark' : 'light');
         document.documentElement.classList.remove('light', 'dark');
         document.documentElement.classList.add(theme);
-      })();
-    </script>
-
-    <style>
-      /* ── Tailwind v4 @theme layer ── */
-      @import "tailwindcss";
-
-      @theme {
-        /* Fonts */
-        --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
-        --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
-
-        /* Brand colors — light mode primitives */
-        --color-ink:          #171717;
-        --color-body:         #4d4d4d;
-        --color-mute:         #888888;
-        --color-hairline:     #ebebeb;
-        --color-hairline-strong: #a1a1a1;
-        --color-canvas:       #ffffff;
-        --color-canvas-soft:  #fafafa;
-        --color-canvas-soft2: #f5f5f5;
-        --color-link:         #0070f3;
-        --color-success:      #0070f3;
-        --color-error:        #ee0000;
-        --color-warning:      #f5a623;
-        --color-cyan:         #50e3c2;
-        --color-violet:       #7928ca;
-        --color-pink:         #ff0080;
-
-        /* Gradient stops */
-        --color-grad-a: #007cf0;
-        --color-grad-b: #00dfd8;
-        --color-grad-c: #7928ca;
-        --color-grad-d: #ff0080;
-        --color-grad-e: #ff4d4d;
-        --color-grad-f: #f9cb28;
-
-        /* Spacing (4px base) */
-        --spacing-xxs: 4px;
-        --spacing-xs:  8px;
-        --spacing-sm:  12px;
-        --spacing-md:  16px;
-        --spacing-lg:  24px;
-        --spacing-xl:  32px;
-        --spacing-2xl: 40px;
-        --spacing-3xl: 48px;
-        --spacing-4xl: 64px;
-        --spacing-5xl: 96px;
-        --spacing-6xl: 128px;
-        --spacing-section: 192px;
-
-        /* Border radius */
-        --radius-xs:     4px;
-        --radius-sm:     6px;
-        --radius-md:     8px;
-        --radius-lg:     12px;
-        --radius-xl:     16px;
-        --radius-pill:   100px;
-        --radius-full:   9999px;
+      } catch (_) {
+        // localStorage blocked (private browsing edge case) — default to light
+        document.documentElement.classList.add('light');
       }
+    })();
+  </script>
 
-      /* ── CSS custom properties for theme switching ── */
-      :root {
-        --bg:          #ffffff;
-        --bg-soft:     #fafafa;
-        --bg-soft2:    #f5f5f5;
-        --fg:          #171717;
-        --fg-body:     #4d4d4d;
-        --fg-mute:     #888888;
-        --border:      #ebebeb;
-        --border-strong: #a1a1a1;
-        --card-shadow: 0 0 0 1px rgba(0,0,0,0.08), 0 1px 1px rgba(0,0,0,0.03), 0 2px 2px rgba(0,0,0,0.06);
-        --card-shadow-lg: 0 0 0 1px rgba(0,0,0,0.08), 0 2px 2px rgba(0,0,0,0.06), 0 8px 16px -4px rgba(0,0,0,0.06);
-      }
+  <style>
+    /* ════════════════════════════════════════════════
+       Tailwind v4 — @theme token layer
+       All design tokens live here; no tailwind.config.js
+    ════════════════════════════════════════════════ */
+    @import "tailwindcss";
 
-      html.dark {
-        --bg:          #000000;
-        --bg-soft:     #0a0a0a;
-        --bg-soft2:    #111111;
-        --fg:          #ededed;
-        --fg-body:     #a1a1a1;
-        --fg-mute:     #666666;
-        --border:      #1f1f1f;
-        --border-strong: #333333;
-        --card-shadow: 0 0 0 1px rgba(255,255,255,0.06), 0 1px 1px rgba(0,0,0,0.4), 0 2px 2px rgba(0,0,0,0.3);
-        --card-shadow-lg: 0 0 0 1px rgba(255,255,255,0.06), 0 2px 2px rgba(0,0,0,0.4), 0 8px 16px -4px rgba(0,0,0,0.5);
-      }
+    @theme {
+      /* Typography */
+      --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+      --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
 
-      *, *::before, *::after { box-sizing: border-box; }
+      /* ── Vercel color primitives ── */
+      --color-ink:             #171717;
+      --color-body:            #4d4d4d;
+      --color-mute:            #888888;
+      --color-hairline:        #ebebeb;
+      --color-hairline-strong: #a1a1a1;
+      --color-canvas:          #ffffff;
+      --color-canvas-soft:     #fafafa;
+      --color-canvas-soft2:    #f5f5f5;
+      --color-link:            #0070f3;
+      --color-success:         #0070f3;
+      --color-error:           #ee0000;
+      --color-warning:         #f5a623;
+      --color-cyan:            #50e3c2;
+      --color-violet:          #7928ca;
+      --color-pink:            #ff0080;
 
-      html {
-        font-family: var(--font-sans);
-        background: var(--bg-soft);
-        color: var(--fg);
-        -webkit-font-smoothing: antialiased;
-        scroll-behavior: smooth;
-      }
+      /* Brand gradient stops */
+      --color-grad-a: #007cf0;
+      --color-grad-b: #00dfd8;
+      --color-grad-c: #7928ca;
+      --color-grad-d: #ff0080;
+      --color-grad-e: #ff4d4d;
+      --color-grad-f: #f9cb28;
 
-      body { margin: 0; min-height: 100vh; }
+      /* ── 4px base spacing scale ── */
+      --spacing-xxs:     4px;
+      --spacing-xs:      8px;
+      --spacing-sm:      12px;
+      --spacing-md:      16px;
+      --spacing-lg:      24px;
+      --spacing-xl:      32px;
+      --spacing-2xl:     40px;
+      --spacing-3xl:     48px;
+      --spacing-4xl:     64px;
+      --spacing-5xl:     96px;
+      --spacing-6xl:     128px;
+      --spacing-section: 192px;
 
-      ::selection {
-        background: var(--fg);
-        color: var(--bg);
-      }
+      /* ── Border radius scale ── */
+      --radius-xs:   4px;
+      --radius-sm:   6px;
+      --radius-md:   8px;
+      --radius-lg:   12px;
+      --radius-xl:   16px;
+      --radius-pill: 100px;
+      --radius-full: 9999px;
+    }
 
-      /* Transition for theme switch */
-      html { transition: background 0.2s ease, color 0.2s ease; }
-    </style>
-  </head>
-  <body>
+    /* ════════════════════════════════════════════════
+       Semantic CSS custom properties — theme-aware
+       Consumed by every component via var(--bg) etc.
+    ════════════════════════════════════════════════ */
+    :root {
+      --bg:           #ffffff;
+      --bg-soft:      #fafafa;
+      --bg-soft2:     #f5f5f5;
+      --fg:           #171717;
+      --fg-body:      #4d4d4d;
+      --fg-mute:      #888888;
+      --border:       #ebebeb;
+      --border-strong:#a1a1a1;
+      --card-shadow:
+        0 0 0 1px rgba(0,0,0,0.08),
+        0 1px 1px rgba(0,0,0,0.03),
+        0 2px 2px rgba(0,0,0,0.06);
+      --card-shadow-lg:
+        0 0 0 1px rgba(0,0,0,0.08),
+        0 2px 2px rgba(0,0,0,0.06),
+        0 8px 16px -4px rgba(0,0,0,0.06);
+    }
+
+    html.dark {
+      --bg:           #000000;
+      --bg-soft:      #0a0a0a;
+      --bg-soft2:     #111111;
+      --fg:           #ededed;
+      --fg-body:      #a1a1a1;
+      --fg-mute:      #666666;
+      --border:       #1f1f1f;
+      --border-strong:#333333;
+      --card-shadow:
+        0 0 0 1px rgba(255,255,255,0.06),
+        0 1px 1px rgba(0,0,0,0.4),
+        0 2px 2px rgba(0,0,0,0.3);
+      --card-shadow-lg:
+        0 0 0 1px rgba(255,255,255,0.06),
+        0 2px 2px rgba(0,0,0,0.4),
+        0 8px 16px -4px rgba(0,0,0,0.5);
+    }
+
+    /* ════════════════════════════════════════════════
+       Global base styles
+    ════════════════════════════════════════════════ */
+    *, *::before, *::after { box-sizing: border-box; }
+
+    html {
+      font-family: var(--font-sans);
+      background:  var(--bg-soft);
+      color:       var(--fg);
+      -webkit-font-smoothing: antialiased;
+      scroll-behavior: smooth;
+      /* Smooth theme transition — applied AFTER initial paint */
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Page content grows to push footer down */
+    main { flex: 1; }
+
+    ::selection {
+      background: var(--fg);
+      color:      var(--bg);
+    }
+
+    /* ── Utility: visually hidden (a11y) ── */
+    .sr-only {
+      position: absolute;
+      width: 1px; height: 1px;
+      padding: 0; margin: -1px;
+      overflow: hidden;
+      clip: rect(0,0,0,0);
+      white-space: nowrap;
+      border-width: 0;
+    }
+
+    /* ── Shared container ── */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    @media (max-width: 600px) {
+      .container { padding: 0 16px; }
+    }
+  </style>
+</head>
+
+<body>
+  <Header />
+  <main>
     <slot />
-  </body>
+  </main>
+  <Footer />
+</body>
 </html>

@@ -1,0 +1,109 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout
+  title="Terms of Service — TheFilamentCalc"
+  description="TheFilamentCalc terms of service. Free to use, no warranty. All calculations are provided for informational purposes."
+  canonical="https://thefilamentcalc.com/terms"
+>
+  <section class="page-hero">
+    <div class="container">
+      <div class="page-eyebrow">Legal</div>
+      <h1 class="page-title">Terms of Service</h1>
+      <p class="page-lead">Effective date: January 1, 2026</p>
+    </div>
+  </section>
+
+  <section class="page-body">
+    <div class="container prose">
+
+      <h2>Acceptance of terms</h2>
+      <p>
+        By using TheFilamentCalc you agree to these terms. If you do not agree, please
+        discontinue use of the site.
+      </p>
+
+      <h2>Use of the calculator</h2>
+      <p>
+        TheFilamentCalc is provided free of charge for personal and commercial use.
+        All calculations are based on standard material density constants and are provided
+        for <strong>informational purposes only</strong>. Results may vary depending on
+        your specific filament brand and manufacturing tolerances.
+      </p>
+
+      <h2>No warranty</h2>
+      <p>
+        The service is provided "as is" without warranty of any kind, express or implied.
+        We make no guarantees regarding the accuracy, completeness, or fitness for a
+        particular purpose of any calculation result.
+      </p>
+
+      <h2>Limitation of liability</h2>
+      <p>
+        TheFilamentCalc and its operators shall not be liable for any direct, indirect,
+        incidental, or consequential damages arising from your use of the calculator or
+        reliance on its results.
+      </p>
+
+      <h2>Changes to these terms</h2>
+      <p>
+        We reserve the right to update these terms at any time. Continued use of the site
+        after changes constitutes acceptance of the revised terms.
+      </p>
+
+      <h2>Contact</h2>
+      <p>Questions? Visit our <a href="/about">About</a> page.</p>
+
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .page-hero {
+    padding: 80px 0 48px;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+  }
+  .page-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--fg-mute);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 12px;
+  }
+  .page-title {
+    font-size: clamp(28px, 4vw, 40px);
+    font-weight: 600;
+    letter-spacing: -1.5px;
+    color: var(--fg);
+    margin: 0 0 8px;
+    line-height: 1.1;
+  }
+  .page-lead {
+    font-size: 14px;
+    color: var(--fg-mute);
+    font-family: 'JetBrains Mono', monospace;
+    margin: 0;
+  }
+  .page-body {
+    padding: 56px 0 80px;
+    background: var(--bg-soft);
+  }
+  .prose h2 {
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: -0.4px;
+    color: var(--fg);
+    margin: 32px 0 8px;
+  }
+  .prose p {
+    font-size: 16px;
+    line-height: 26px;
+    color: var(--fg-body);
+    margin: 0 0 14px;
+    max-width: 680px;
+  }
+  .prose a { color: #0070f3; text-decoration: underline; }
+</style>

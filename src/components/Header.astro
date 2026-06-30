@@ -1,0 +1,185 @@
+---
+// Header.astro — sticky nav bar, Vercel design system
+const navLinks = [
+  { href: '/',        label: 'Home'     },
+  { href: '/about',   label: 'About Us' },
+];
+
+const currentPath = Astro.url.pathname;
+---
+
+<header id="site-header">
+  <nav class="nav-inner">
+
+    <!-- Brand -->
+    <a href="/" class="nav-brand" aria-label="TheFilamentCalc — home">
+      <svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+        <circle cx="10" cy="10" r="9" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M10 4 Q14 7 10 10 Q6 13 10 16"
+              stroke="currentColor" stroke-width="1.5"
+              stroke-linecap="round" fill="none"/>
+      </svg>
+      <span>TheFilamentCalc</span>
+    </a>
+
+    <!-- Nav links -->
+    <ul class="nav-links" role="list">
+      {navLinks.map(({ href, label }) => (
+        <li>
+          <a
+            href={href}
+            class={`nav-link${currentPath === href ? ' nav-link--active' : ''}`}
+            aria-current={currentPath === href ? 'page' : undefined}
+          >
+            {label}
+          </a>
+        </li>
+      ))}
+    </ul>
+
+    <!-- Theme toggle -->
+    <button
+      id="theme-toggle"
+      aria-label="Toggle light / dark theme"
+      title="Toggle theme"
+    >
+      <!-- Sun icon (shown in dark mode) -->
+      <span class="icon-sun" aria-hidden="true">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2"
+             stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="5"/>
+          <line x1="12" y1="1"  x2="12" y2="3"/>
+          <line x1="12" y1="21" x2="12" y2="23"/>
+          <line x1="4.22"  y1="4.22"  x2="5.64"  y2="5.64"/>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+          <line x1="1"  y1="12" x2="3"  y2="12"/>
+          <line x1="21" y1="12" x2="23" y2="12"/>
+          <line x1="4.22"  y1="19.78" x2="5.64"  y2="18.36"/>
+          <line x1="18.36" y1="5.64"  x2="19.78" y2="4.22"/>
+        </svg>
+      </span>
+      <!-- Moon icon (shown in light mode) -->
+      <span class="icon-moon" aria-hidden="true">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2"
+             stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+      </span>
+    </button>
+
+  </nav>
+</header>
+
+<style>
+  /* ── Header shell ── */
+  #site-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+    /* Frosted-glass effect */
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    /* Smooth theme transition */
+    transition: background 0.2s ease, border-color 0.2s ease;
+  }
+
+  /* ── Inner nav row ── */
+  .nav-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  /* ── Brand ── */
+  .nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    color: var(--fg);
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: -0.28px;
+    flex-shrink: 0;
+    transition: opacity 0.15s;
+  }
+  .nav-brand:hover { opacity: 0.75; }
+
+  /* ── Link list ── */
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* ── Individual link ── */
+  .nav-link {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 10px;
+    border-radius: 9999px;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: -0.28px;
+    color: var(--fg-body);
+    text-decoration: none;
+    transition: color 0.15s, background 0.15s;
+  }
+  .nav-link:hover {
+    color: var(--fg);
+    background: var(--bg-soft2);
+  }
+  .nav-link--active {
+    color: var(--fg);
+    font-weight: 500;
+  }
+
+  /* ── Theme toggle button ── */
+  #theme-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 9999px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--fg);
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  #theme-toggle:hover { background: var(--bg-soft2); }
+
+  /* Icon visibility controlled by html class */
+  html.light .icon-moon { display: none; }
+  html.dark  .icon-sun  { display: none; }
+
+  /* ── Mobile: hide link labels below 480px ── */
+  @media (max-width: 480px) {
+    .nav-links { display: none; }
+  }
+</style>
+
+<script>
+  const btn = document.getElementById('theme-toggle');
+  btn?.addEventListener('click', () => {
+    const isDark = document.documentElement.classList.contains('dark');
+    const next   = isDark ? 'light' : 'dark';
+    document.documentElement.classList.remove('light', 'dark');
+    document.documentElement.classList.add(next);
+    localStorage.setItem('theme', next);
+  });
+</script>
