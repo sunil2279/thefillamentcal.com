@@ -158,9 +158,25 @@ const currentPath = Astro.url.pathname;
   html.light .icon-moon { display: none; }
   html.dark  .icon-sun  { display: none; }
 
-  /* ── Mobile: hide link labels below 480px ── */
+  /* ── Mobile: scroll horizontally instead of hiding ── */
   @media (max-width: 480px) {
-    .nav-links { display: none; }
+    .nav-inner {
+      padding: 0 16px;
+      gap: 8px;
+    }
+    .nav-links {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      flex-shrink: 1;
+      min-width: 0;
+    }
+    .nav-links::-webkit-scrollbar { display: none; }
+    .nav-link {
+      padding: 6px 8px;
+      font-size: 13px;
+      white-space: nowrap;
+    }
   }
 </style>
 
