@@ -4,9 +4,6 @@ import Layout from '../layouts/Layout.astro';
 
 <Layout>
 
-<!-- ═══════════════════════════════════════════════════════════
-     JSON-LD Structured Data
-═══════════════════════════════════════════════════════════ -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -79,46 +76,9 @@ import Layout from '../layouts/Layout.astro';
 }
 </script>
 
-<!-- ═══════════════════════════════════════════════════════════
-     NAV
-═══════════════════════════════════════════════════════════ -->
-<header id="site-nav">
-  <nav>
-    <a href="/" class="nav-logo" aria-label="TheFilamentCalc home">
-      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-        <circle cx="10" cy="10" r="9" stroke="currentColor" stroke-width="1.5"/>
-        <path d="M10 4 Q14 7 10 10 Q6 13 10 16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" fill="none"/>
-      </svg>
-      <span>TheFilamentCalc</span>
-    </a>
-    <div class="nav-right">
-      <a href="#docs" class="nav-link">Docs</a>
-      <a href="#faq" class="nav-link">FAQ</a>
-      <button id="theme-toggle" aria-label="Toggle light/dark theme" title="Toggle theme">
-        <span class="icon-sun" aria-hidden="true">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="5"/>
-            <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
-            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-            <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
-            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
-          </svg>
-        </span>
-        <span class="icon-moon" aria-hidden="true">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-          </svg>
-        </span>
-      </button>
-    </div>
-  </nav>
-</header>
 
-<!-- ═══════════════════════════════════════════════════════════
-     HERO
-═══════════════════════════════════════════════════════════ -->
 <section class="hero-band">
-  <div class="hero-gradient" aria-hidden="true"></div>
+  <div class="hero-gradient"></div>
   <div class="container hero-content">
     <div class="eyebrow">3D Printer Filament Calculator</div>
     <h1>Convert filament grams<br>to meters, instantly.</h1>
@@ -126,14 +86,11 @@ import Layout from '../layouts/Layout.astro';
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════════════════════
-     CALCULATOR CARD
-═══════════════════════════════════════════════════════════ -->
-<main id="calculator">
+
+<section id="calculator" class="calculator-section">
   <div class="container">
     <div class="calc-card">
 
-      <!-- ── Top controls row ── -->
       <div class="calc-top">
         <div class="field-group">
           <label for="material-select" class="field-label">Material</label>
@@ -154,7 +111,6 @@ import Layout from '../layouts/Layout.astro';
         </div>
       </div>
 
-      <!-- ── Primary input ── -->
       <div class="primary-input-wrap">
         <label for="grams-input" class="primary-label">Filament Weight</label>
         <div class="primary-input-row">
@@ -171,8 +127,7 @@ import Layout from '../layouts/Layout.astro';
         </div>
       </div>
 
-      <!-- ── Quick-fill chips ── -->
-      <div class="chips-row" id="chips-row" aria-label="Quick fill amounts">
+      <div class="chips-row" id="chips-row">
         <span class="chips-label">Quick fill:</span>
         <button class="chip" data-g="10">10g</button>
         <button class="chip" data-g="25">25g</button>
@@ -181,13 +136,12 @@ import Layout from '../layouts/Layout.astro';
         <button class="chip" data-g="250">250g</button>
         <button class="chip" data-g="500">500g</button>
         <button class="chip" data-g="1000">1000g</button>
-        <span class="chips-divider" aria-hidden="true"></span>
+        <span class="chips-divider"></span>
         <span class="chips-label">Recent:</span>
         <div id="recent-chips" class="recent-chips-inner"></div>
       </div>
 
-      <!-- ── Results matrix ── -->
-      <div class="results-grid" id="results-grid" aria-live="polite" aria-atomic="true">
+      <div class="results-grid" id="results-grid">
 
         <div class="result-card">
           <div class="result-label">Length</div>
@@ -236,18 +190,14 @@ import Layout from '../layouts/Layout.astro';
 
       </div>
 
-      <!-- ── Spool progress bar ── -->
-      <div class="spool-bar-wrap" aria-hidden="true">
+      <div class="spool-bar-wrap">
         <div class="spool-bar-track">
           <div class="spool-bar-fill" id="spool-bar-fill"></div>
         </div>
         <span class="spool-bar-label" id="spool-bar-label">0% of spool used</span>
       </div>
 
-      <!-- ══════════════════════════════════════════════════════════
-           RECOMMENDED MAKER HARDWARE — Affiliate section
-      ══════════════════════════════════════════════════════════ -->
-      <div class="affiliate-section" aria-label="Recommended maker hardware">
+      <div class="affiliate-section">
 
         <div class="affiliate-header">
           <span class="affiliate-eyebrow">Recommended Gear</span>
@@ -256,9 +206,8 @@ import Layout from '../layouts/Layout.astro';
 
         <div class="affiliate-grid">
 
-          <!-- Card 1: Best All-Round PLA -->
           <article class="aff-card">
-            <div class="aff-card-icon" aria-hidden="true">
+            <div class="aff-card-icon">
               <svg width="28" height="28" viewBox="0 0 24 24" fill="none"
                    stroke="currentColor" stroke-width="1.5"
                    stroke-linecap="round" stroke-linejoin="round">
@@ -279,13 +228,7 @@ import Layout from '../layouts/Layout.astro';
               <li>Weight: 1kg net</li>
               <li>Print temp: 190&ndash;220&deg;C</li>
             </ul>
-            <a
-              href="https://www.amazon.com/s?k=pla+filament+1.75mm+1kg"
-              class="aff-btn"
-              rel="sponsored nofollow"
-              target="_blank"
-              aria-label="Check price for PLA filament on Amazon (opens in new tab)"
-            >
+            <a href="https://www.amazon.com/s?k=pla+filament+1.75mm+1kg" class="aff-btn">
               Check Price on Amazon
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
                    stroke="currentColor" stroke-width="2"
@@ -298,9 +241,8 @@ import Layout from '../layouts/Layout.astro';
             </a>
           </article>
 
-          <!-- Card 2: High-Strength PETG/ABS -->
           <article class="aff-card">
-            <div class="aff-card-icon" aria-hidden="true">
+            <div class="aff-card-icon">
               <svg width="28" height="28" viewBox="0 0 24 24" fill="none"
                    stroke="currentColor" stroke-width="1.5"
                    stroke-linecap="round" stroke-linejoin="round">
@@ -319,13 +261,7 @@ import Layout from '../layouts/Layout.astro';
               <li>Weight: 1kg net</li>
               <li>Print temp: 220&ndash;250&deg;C</li>
             </ul>
-            <a
-              href="https://www.amazon.com/s?k=petg+filament+1.75mm+1kg"
-              class="aff-btn"
-              rel="sponsored nofollow"
-              target="_blank"
-              aria-label="Check price for PETG filament on Amazon (opens in new tab)"
-            >
+            <a href="https://www.amazon.com/s?k=petg+filament+1.75mm+1kg" class="aff-btn">
               Check Price on Amazon
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
                    stroke="currentColor" stroke-width="2"
@@ -338,9 +274,8 @@ import Layout from '../layouts/Layout.astro';
             </a>
           </article>
 
-          <!-- Card 3: Digital Kitchen Scale -->
           <article class="aff-card">
-            <div class="aff-card-icon" aria-hidden="true">
+            <div class="aff-card-icon">
               <svg width="28" height="28" viewBox="0 0 24 24" fill="none"
                    stroke="currentColor" stroke-width="1.5"
                    stroke-linecap="round" stroke-linejoin="round">
@@ -363,13 +298,7 @@ import Layout from '../layouts/Layout.astro';
               <li>Capacity: up to 5kg</li>
               <li>Tare function included</li>
             </ul>
-            <a
-              href="https://www.amazon.com/s?k=digital+kitchen+scale+0.1g+5kg"
-              class="aff-btn"
-              rel="sponsored nofollow"
-              target="_blank"
-              aria-label="Check price for digital kitchen scale on Amazon (opens in new tab)"
-            >
+            <a href="https://www.amazon.com/s?k=digital+kitchen+scale+0.1g+5kg" class="aff-btn">
               Check Price on Amazon
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
                    stroke="currentColor" stroke-width="2"
@@ -384,22 +313,18 @@ import Layout from '../layouts/Layout.astro';
 
         </div>
 
-        <!-- Affiliate disclosure -->
         <p class="aff-disclosure">
           <em>Disclosure: As an associate, we may earn a small commission from qualifying
           purchases at no additional cost to you.</em>
         </p>
 
       </div>
-      <!-- end affiliate section -->
 
     </div>
   </div>
-</main>
+</section>
 
-<!-- ═══════════════════════════════════════════════════════════
-     CONVERSION CHART
-═══════════════════════════════════════════════════════════ -->
+
 <section class="chart-section" id="chart">
   <div class="container">
     <div class="section-eyebrow">Reference Chart</div>
@@ -419,16 +344,13 @@ import Layout from '../layouts/Layout.astro';
           </tr>
         </thead>
         <tbody id="chart-tbody">
-          <!-- Populated by JS -->
         </tbody>
       </table>
     </div>
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════════════════════
-     DOCUMENTATION
-═══════════════════════════════════════════════════════════ -->
+
 <article class="docs-section" id="docs">
   <div class="container docs-container">
 
@@ -511,9 +433,7 @@ import Layout from '../layouts/Layout.astro';
   </div>
 </article>
 
-<!-- ═══════════════════════════════════════════════════════════
-     FAQ
-═══════════════════════════════════════════════════════════ -->
+
 <section class="faq-section" id="faq">
   <div class="container">
     <div class="section-eyebrow">FAQ</div>
@@ -568,31 +488,7 @@ import Layout from '../layouts/Layout.astro';
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════════════════════
-     FOOTER
-═══════════════════════════════════════════════════════════ -->
-<footer class="site-footer">
-  <div class="container footer-inner">
-    <div class="footer-brand">
-      <svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-        <circle cx="10" cy="10" r="9" stroke="currentColor" stroke-width="1.5"/>
-        <path d="M10 4 Q14 7 10 10 Q6 13 10 16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" fill="none"/>
-      </svg>
-      <span>TheFilamentCalc</span>
-    </div>
-    <p class="footer-copy">Free 3D printer filament calculator. All calculations run locally in your browser.</p>
-    <nav class="footer-links" aria-label="Footer navigation">
-      <a href="#calculator">Calculator</a>
-      <a href="#chart">Chart</a>
-      <a href="#docs">Docs</a>
-      <a href="#faq">FAQ</a>
-    </nav>
-  </div>
-</footer>
 
-<!-- ═══════════════════════════════════════════════════════════
-     STYLES
-═══════════════════════════════════════════════════════════ -->
 <style>
   /* ── Layout containers ── */
   .container {
@@ -600,76 +496,6 @@ import Layout from '../layouts/Layout.astro';
     margin: 0 auto;
     padding: 0 24px;
   }
-
-  /* ── NAV ── */
-  #site-nav {
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    background: var(--bg);
-    border-bottom: 1px solid var(--border);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-  }
-
-  #site-nav nav {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 24px;
-    height: 64px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-  }
-
-  .nav-logo {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    text-decoration: none;
-    color: var(--fg);
-    font-size: 14px;
-    font-weight: 600;
-    letter-spacing: -0.28px;
-  }
-
-  .nav-right {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-  }
-
-  .nav-link {
-    color: var(--fg-body);
-    text-decoration: none;
-    font-size: 14px;
-    font-weight: 400;
-    letter-spacing: -0.28px;
-    padding: 6px 10px;
-    border-radius: 9999px;
-    transition: color 0.15s, background 0.15s;
-  }
-  .nav-link:hover { color: var(--fg); background: var(--bg-soft2); }
-
-  #theme-toggle {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 32px;
-    height: 32px;
-    border-radius: 9999px;
-    border: 1px solid var(--border);
-    background: var(--bg);
-    color: var(--fg);
-    cursor: pointer;
-    transition: background 0.15s, border-color 0.15s;
-    margin-left: 4px;
-  }
-  #theme-toggle:hover { background: var(--bg-soft2); }
-
-  html.light .icon-moon { display: none; }
-  html.dark  .icon-sun  { display: none; }
 
   /* ── HERO ── */
   .hero-band {
@@ -734,8 +560,8 @@ import Layout from '../layouts/Layout.astro';
     margin: 0 auto;
   }
 
-  /* ── CALCULATOR CARD ── */
-  main#calculator {
+  /* ── CALCULATOR SECTION ── */
+  .calculator-section {
     padding: 48px 0 64px;
     background: var(--bg-soft);
   }
@@ -1048,6 +874,128 @@ import Layout from '../layouts/Layout.astro';
     min-width: 140px;
   }
 
+  /* ── AFFILIATE ── */
+  .affiliate-section {
+    margin-top: 40px;
+    padding-top: 32px;
+    border-top: 1px solid var(--border);
+  }
+
+  .affiliate-header {
+    margin-bottom: 20px;
+  }
+
+  .affiliate-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--fg-mute);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    display: block;
+    margin-bottom: 6px;
+  }
+
+  .affiliate-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--fg);
+    margin: 0;
+    letter-spacing: -0.5px;
+  }
+
+  .affiliate-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+
+  @media (max-width: 700px) {
+    .affiliate-grid { grid-template-columns: 1fr; }
+  }
+
+  .aff-card {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    background: var(--bg-soft);
+  }
+
+  .aff-card-icon { color: var(--fg-mute); }
+
+  .aff-card-badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 2px 8px;
+    border-radius: 9999px;
+    background: var(--fg);
+    color: var(--bg);
+    width: fit-content;
+  }
+
+  .aff-card-badge--blue { background: #0070f3; color: #fff; }
+  .aff-card-badge--green { background: #0a7c4e; color: #fff; }
+
+  .aff-card-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--fg);
+    margin: 0;
+    letter-spacing: -0.3px;
+  }
+
+  .aff-card-desc {
+    font-size: 13px;
+    line-height: 20px;
+    color: var(--fg-body);
+    margin: 0;
+  }
+
+  .aff-card-specs {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .aff-card-specs li {
+    font-size: 12px;
+    color: var(--fg-mute);
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .aff-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: auto;
+    padding: 8px 14px;
+    border-radius: 6px;
+    background: var(--fg);
+    color: var(--bg);
+    font-size: 13px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: opacity 0.15s;
+    width: fit-content;
+  }
+
+  .aff-btn:hover { opacity: 0.8; }
+
+  .aff-disclosure {
+    font-size: 12px;
+    color: var(--fg-mute);
+    margin: 0;
+  }
+
   /* ── CHART SECTION ── */
   .chart-section {
     padding: 80px 0;
@@ -1251,62 +1199,13 @@ import Layout from '../layouts/Layout.astro';
     padding: 1px 5px;
     color: var(--fg);
   }
-
-  /* ── FOOTER ── */
-  .site-footer {
-    background: var(--bg);
-    border-top: 1px solid var(--border);
-    padding: 40px 0;
-  }
-
-  .footer-inner {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 16px;
-    justify-content: space-between;
-  }
-
-  .footer-brand {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--fg);
-    letter-spacing: -0.28px;
-  }
-
-  .footer-copy {
-    font-size: 13px;
-    color: var(--fg-mute);
-    margin: 0;
-    flex: 1;
-    min-width: 200px;
-  }
-
-  .footer-links {
-    display: flex;
-    gap: 16px;
-  }
-
-  .footer-links a {
-    font-size: 13px;
-    color: var(--fg-mute);
-    text-decoration: none;
-    transition: color 0.12s;
-  }
-
-  .footer-links a:hover { color: var(--fg); }
 </style>
 
-<!-- ═══════════════════════════════════════════════════════════
-     JAVASCRIPT ENGINE
-═══════════════════════════════════════════════════════════ -->
+
 <script>
   // ── Constants ──
-  const RADIUS_CM = 0.0875; // 1.75mm / 2 in cm
-  const VOL_PER_METER = Math.PI * RADIUS_CM * RADIUS_CM * 100; // cm³/m
+  const RADIUS_CM = 0.0875;
+  const VOL_PER_METER = Math.PI * RADIUS_CM * RADIUS_CM * 100;
   const METERS_TO_FEET = 3.28084;
   const MAX_RECENT = 5;
   const RECENT_KEY = 'tfc_recent_grams';
@@ -1343,7 +1242,7 @@ import Layout from '../layouts/Layout.astro';
   }
 
   function weightPerMeter(density) {
-    return VOL_PER_METER * density; // g/m
+    return VOL_PER_METER * density;
   }
 
   function gramsToMeters(grams, density) {
@@ -1453,7 +1352,6 @@ import Layout from '../layouts/Layout.astro';
         btn.classList.add('copied');
         setTimeout(() => btn.classList.remove('copied'), 1500);
       } catch {
-        // Fallback for older browsers
         const ta = document.createElement('textarea');
         ta.value = text;
         ta.style.position = 'fixed';
@@ -1466,15 +1364,6 @@ import Layout from '../layouts/Layout.astro';
         setTimeout(() => btn.classList.remove('copied'), 1500);
       }
     });
-  });
-
-  // ── Theme toggle ──
-  document.getElementById('theme-toggle').addEventListener('click', () => {
-    const isDark = document.documentElement.classList.contains('dark');
-    const next = isDark ? 'light' : 'dark';
-    document.documentElement.classList.remove('light', 'dark');
-    document.documentElement.classList.add(next);
-    localStorage.setItem('theme', next);
   });
 
   // ── Conversion chart ──
