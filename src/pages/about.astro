@@ -7,48 +7,62 @@ import Layout from '../layouts/Layout.astro';
   description="Learn about TheFilamentCalc — a free, browser-based 3D printer filament calculator built for makers, hobbyists, and print farms."
   canonical="https://thefilamentcalc.com/about"
 >
-  <section class="page-hero">
-    <div class="container">
+  <div class="page-wrapper">
+    <section class="page-hero">
       <div class="page-eyebrow">About</div>
       <h1 class="page-title">Built for 3D printing makers.</h1>
       <p class="page-lead">
         TheFilamentCalc is a free, privacy-first utility that runs entirely in your browser.
         No accounts, no tracking, no server calls — just fast, accurate filament math.
       </p>
-    </div>
-  </section>
+    </section>
 
-  <section class="page-body">
-    <div class="container prose">
-      <h2>Why we built this</h2>
-      <p>
-        Every 3D printing slicer reports material usage in grams, but spools are sold by weight
-        and priced per kilogram. Converting between the two — accounting for material density,
-        filament diameter, and spool cost — requires math that most makers do on a napkin or
-        in a spreadsheet. We built TheFilamentCalc to make that instant.
-      </p>
+    <section class="page-body">
+      <div class="prose">
 
-      <h2>How it works</h2>
-      <p>
-        The calculator uses the volumetric density of each polymer (PLA, ABS, PETG, TPU) and
-        the cross-sectional geometry of 1.75mm filament to compute exact length from weight.
-        All arithmetic runs client-side in vanilla JavaScript — no frameworks, no APIs.
-      </p>
+        <h2>Why we built this</h2>
+        <p>
+          Every 3D printing slicer reports material usage in grams, but spools are sold by weight
+          and priced per kilogram. Converting between the two — accounting for material density,
+          filament diameter, and spool cost — requires math that most makers do on a napkin or
+          in a spreadsheet. We built TheFilamentCalc to make that instant.
+        </p>
 
-      <h2>Privacy</h2>
-      <p>
-        We do not collect any personal data. Your recent weight entries are stored only in your
-        own browser's <code>localStorage</code> and never leave your device.
-        See our <a href="/privacy">Privacy Policy</a> for full details.
-      </p>
-    </div>
-  </section>
+        <h2>How it works</h2>
+        <p>
+          The calculator uses the volumetric density of each polymer (PLA, ABS, PETG, TPU) and
+          the cross-sectional geometry of 1.75mm filament to compute exact length from weight.
+          All arithmetic runs client-side in vanilla JavaScript — no frameworks, no APIs.
+        </p>
+
+        <h2>Privacy</h2>
+        <p>
+          We do not collect any personal data. Your recent weight entries are stored only in your
+          own browser's <code>localStorage</code> and never leave your device.
+          See our <a href="/privacy">Privacy Policy</a> for full details.
+        </p>
+
+      </div>
+    </section>
+  </div>
 </Layout>
 
 <style>
+  .page-wrapper {
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 80px 24px;
+    background: var(--bg-soft);
+  }
+
   .page-hero {
-    padding: 80px 0 48px;
-    background: var(--bg);
+    width: 100%;
+    max-width: 680px;
+    text-align: center;
+    margin-bottom: 48px;
+    padding-bottom: 40px;
     border-bottom: 1px solid var(--border);
   }
 
@@ -74,13 +88,13 @@ import Layout from '../layouts/Layout.astro';
     font-size: 17px;
     line-height: 27px;
     color: var(--fg-body);
-    max-width: 560px;
-    margin: 0;
+    max-width: 520px;
+    margin: 0 auto;
   }
 
   .page-body {
-    padding: 56px 0 80px;
-    background: var(--bg-soft);
+    width: 100%;
+    max-width: 680px;
   }
 
   .prose h2 {
@@ -88,7 +102,11 @@ import Layout from '../layouts/Layout.astro';
     font-weight: 600;
     letter-spacing: -0.6px;
     color: var(--fg);
-    margin: 32px 0 10px;
+    margin: 36px 0 10px;
+  }
+
+  .prose h2:first-child {
+    margin-top: 0;
   }
 
   .prose p {
@@ -96,7 +114,6 @@ import Layout from '../layouts/Layout.astro';
     line-height: 26px;
     color: var(--fg-body);
     margin: 0 0 14px;
-    max-width: 680px;
   }
 
   .prose code {
@@ -110,7 +127,15 @@ import Layout from '../layouts/Layout.astro';
   }
 
   .prose a {
-    color: var(--color-link, #0070f3);
+    color: #0070f3;
     text-decoration: underline;
+  }
+
+  .prose a:hover {
+    opacity: 0.8;
+  }
+
+  @media (max-width: 600px) {
+    .page-wrapper { padding: 48px 16px; }
   }
 </style>
