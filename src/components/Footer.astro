@@ -12,7 +12,6 @@ const legalLinks = [
 <footer id="site-footer">
   <div class="footer-inner">
 
-    <!-- Brand + copyright -->
     <div class="footer-brand">
       <svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true">
         <circle cx="10" cy="10" r="9" stroke="currentColor" stroke-width="1.5"/>
@@ -25,7 +24,6 @@ const legalLinks = [
       </span>
     </div>
 
-    <!-- Legal links -->
     <nav class="footer-links" aria-label="Footer legal links">
       {legalLinks.map(({ href, label }) => (
         <a href={href} class="footer-link">{label}</a>
@@ -53,7 +51,6 @@ const legalLinks = [
     gap: 12px;
   }
 
-  /* Brand row */
   .footer-brand {
     display: flex;
     align-items: center;
@@ -66,7 +63,6 @@ const legalLinks = [
     color: var(--fg-mute);
   }
 
-  /* Legal links */
   .footer-links {
     display: flex;
     align-items: center;
@@ -81,7 +77,6 @@ const legalLinks = [
   }
   .footer-link:hover { color: var(--fg); }
 
-  /* Stack on very small screens */
   @media (max-width: 480px) {
     .footer-inner { flex-direction: column; align-items: flex-start; }
   }
