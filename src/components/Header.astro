@@ -150,6 +150,10 @@ const currentPath = Astro.url.pathname;
   }
   #theme-toggle:hover { background: var(--bg-soft2); }
 
+  /* Logo visibility controlled by html class */
+  html.light .logo-light { display: none; }
+  html.dark  .logo-dark  { display: none; }
+
   /* Icon visibility controlled by html class */
   html.light .icon-moon { display: none; }
   html.dark  .icon-sun  { display: none; }
