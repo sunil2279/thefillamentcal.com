@@ -15,8 +15,11 @@ const currentPath = Astro.url.pathname;
   <nav class="nav-inner">
 
     <a href="/" class="nav-brand">
-      <img src="/logo-dark.png"  class="logo-dark"  width="24" height="24" alt="TheFilamentCalc logo" aria-hidden="true" />
-      <img src="/logo-white.png" class="logo-light" width="24" height="24" alt="TheFilamentCalc logo" aria-hidden="true" />
+      <img src="/logo.png" height="30" alt="TheFilamentCalc logo"
+      class="logo"
+      />
+
+     
       <span>TheFilamentCalc</span>
     </a>
 
@@ -188,9 +191,9 @@ const currentPath = Astro.url.pathname;
   #theme-toggle:hover { background: var(--bg-soft2); }
 
   /* Logo visibility */
-  html.light .logo-dark  { display: none; }
-  html.dark  .logo-light { display: none; }
-  .logo-light { border-radius: 7px; }
+  
+  html.dark  .logo { filter:invert(); border:none}
+  .logo { border-radius: 7px; fillter:brightness(0.5)}
 
   /* Icon visibility */
   html.light .icon-moon { display: none; }
