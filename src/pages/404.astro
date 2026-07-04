@@ -1,0 +1,147 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout
+  title="404 — Page Not Found"
+  description="The page you are looking for does not exist or has been moved."
+  canonical="https://thefilamentcalc.com/404"
+>
+  <div class="error-wrapper">
+    <div class="error-content">
+      <div class="error-code">404</div>
+      <div class="error-divider"></div>
+      <div class="error-message">
+        <h1 class="error-title">Page Not Found</h1>
+        <p class="error-desc">The page you are looking for does not exist or has been moved.</p>
+        <a href="/" class="error-btn">
+          Go Back Home
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<style>
+  .error-wrapper {
+    min-height: calc(100vh - 180px); /* Adjusts for header/footer space */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 80px 24px;
+    background: var(--bg-soft);
+  }
+
+  .error-content {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    max-width: 600px;
+    width: 100%;
+  }
+
+  .error-code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 80px;
+    font-weight: 400;
+    color: var(--fg);
+    letter-spacing: -2px;
+    line-height: 1;
+    user-select: none;
+  }
+
+  .error-divider {
+    width: 1px;
+    height: 100px;
+    background: var(--border);
+  }
+
+  .error-message {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .error-title {
+    font-size: 24px;
+    font-weight: 600;
+    letter-spacing: -0.6px;
+    color: var(--fg);
+    margin: 0;
+    line-height: 1.2;
+  }
+
+  .error-desc {
+    font-size: 15px;
+    line-height: 22px;
+    color: var(--fg-body);
+    margin: 0 0 8px;
+  }
+
+  .error-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    height: 40px;
+    padding: 0 16px;
+    border-radius: 6px;
+    background: var(--fg);
+    color: var(--bg);
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    border: 1px solid var(--fg);
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .error-btn svg {
+    transition: transform 0.2s ease;
+  }
+
+  .error-btn:hover {
+    background: var(--bg);
+    color: var(--fg);
+    border-color: var(--fg);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  }
+
+  html.dark .error-btn:hover {
+    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.05);
+  }
+
+  .error-btn:hover svg {
+    transform: translateX(2px);
+  }
+
+  .error-btn:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--border-strong);
+  }
+
+  @media (max-width: 640px) {
+    .error-content {
+      flex-direction: column;
+      text-align: center;
+      gap: 24px;
+    }
+
+    .error-divider {
+      width: 60px;
+      height: 1px;
+    }
+
+    .error-message {
+      align-items: center;
+    }
+
+    .error-code {
+      font-size: 64px;
+    }
+  }
+</style>
